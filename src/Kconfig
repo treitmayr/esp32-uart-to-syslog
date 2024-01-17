@@ -1,0 +1,98 @@
+menu "UART-to-Serial"
+
+    config OWN_HOSTNAME
+        string "Own Host Name"
+        default "uart-syslog"
+        help
+            The own host name.
+
+    config SYSLOG_HOST
+        string "Syslog Server Address"
+        default ""
+        help
+            Host name or IP address of the syslog server.
+
+    config SYSLOG_PORT
+        int "Syslog Server Port Number"
+        default 514
+        help
+            UDP port of the syslog server.
+
+    choice SYSLOG_MESSAGE_FORMAT
+        prompt "Message format"
+        default SYSLOG_MESSAGE_FORMAT_RFC5424
+        help
+            The format of the generated message.
+
+        config SYSLOG_MESSAGE_FORMAT_RFC5424
+            bool "RFC 5424"
+            help
+                UDP messages using the format as specified in
+                https://datatracker.ietf.org/doc/html/rfc5424#section-6
+        config SYSLOG_MESSAGE_FORMAT_RAW
+            bool "raw"
+            help
+                Send raw messages without any syslog header via UDP.
+    endchoice
+
+    config SYSLOG_APP_NAME
+        string "Syslog Application Name"
+        default "-"
+        help
+            Application name to include in the syslog message.
+
+    config SYSLOG_USE_UART1
+        bool "Use UART1"
+        help
+           Enable if UART1 will be connected.
+
+    if SYSLOG_USE_UART1
+        menu "UART1"
+            config SYSLOG_UART1_TASK_NAME
+                string "Syslog Task Name for UART1"
+                default "-"
+                help
+                    Task name to include in the syslog messages of UART1.
+
+            config SYSLOG_UART1_BAUD_RATE
+                int "Baud Rate for UART1"
+                default 115200
+                help
+                    Baud rate for UART1.
+
+            config SYSLOG_UART1_RX_PIN
+                int "RX Pin for UART1"
+                default 9
+                help
+                    Pin to use for UART1 receiver.
+        endmenu
+    endif
+
+    config SYSLOG_USE_UART2
+        bool "Use UART2"
+        help
+            Enable if UART2 will be connected.
+
+        if SYSLOG_USE_UART2
+            menu "UART2"
+                config SYSLOG_UART2_TASK_NAME
+                    string "Syslog Task Name for UART2"
+                    default "-"
+                    help
+                        Task name to include in the syslog messages of UART2.
+
+                config SYSLOG_UART2_BAUD_RATE
+                    int "Baud Rate for UART2"
+                    default 115200
+                    help
+                        Baud rate for UART2.
+
+                config SYSLOG_UART2_RX_PIN
+                    int "RX Pin for UART2"
+                    default 16
+                    help
+                        Pin to use for UART2 receiver.
+            endmenu
+        endif
+
+endmenu
